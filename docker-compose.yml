@@ -68,5 +68,17 @@ services:
   redis:
     image: redis:7-alpine
 
+  prometheus:
+    image: prom/prometheus:v3.11.3
+    volumes:
+      - ./example/prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    depends_on:
+      netbox:
+        condition: service_started
+
 volumes:
   netbox-postgres-data:

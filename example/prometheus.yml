@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "netbox-sd"
+    http_sd_configs:
+      - url: http://netbox:8080/api/plugins/prometheus-sd/targets/
+        refresh_interval: 15s
+    relabel_configs:
+      - source_labels: [__meta_netbox_name]
+        target_label: instance
