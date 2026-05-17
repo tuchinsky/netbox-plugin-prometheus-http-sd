@@ -1,10 +1,24 @@
 [project]
 name = "netbox-prometheus-sd"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A Netbox plugin to export targets for Prometheus HTTP service discovery"
 readme = "README.md"
-keywords = ["netbox", "prometheus"]
-authors = [{ name = "Artem Tuchinsky", email = "tuchinsky@gmail.com" }]
 license = "Apache-2.0"
+authors = [{ name = "Artem Tuchinsky", email = "tuchinsky@gmail.com" }]
+keywords = ["netbox", "prometheus"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
 requires-python = ">=3.8"
 dependencies = []
+
+[project.urls]
+Repository = "https://github.com/tuchinsky/netbox-prometheus-sd"
+
+[build-system]
+requires = ["setuptools>=61", "wheel", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+version_file = "netbox_prometheus_sd/_version.py"
+local_scheme = "no-local-version"

@@ -1,10 +1,15 @@
 from netbox.plugins import PluginConfig
 
+try:
+    from ._version import version as __version__
+except ImportError:
+    __version__ = "0.0.0.dev0"
+
 class NetBoxPrometheusSDConfig(PluginConfig):
     name = 'netbox_prometheus_sd'
     verbose_name = 'NetBox Prometheus SD'
     description = 'A Netbox plugin to export targets for Prometheus HTTP service discovery'
-    version = '0.1.0'
+    version = __version__
     base_url = 'prometheus-sd'
 
 config = NetBoxPrometheusSDConfig

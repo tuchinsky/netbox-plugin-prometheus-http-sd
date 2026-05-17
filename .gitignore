@@ -14,3 +14,6 @@ build/
 *.swp
 *.swo
 *~
+
+# setuptools
+netbox_prometheus_sd/_version.py
