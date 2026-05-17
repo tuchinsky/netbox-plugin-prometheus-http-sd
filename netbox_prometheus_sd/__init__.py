@@ -3,7 +3,7 @@ from netbox.plugins import PluginConfig
 class NetBoxPrometheusSDConfig(PluginConfig):
     name = 'netbox_prometheus_sd'
     verbose_name = 'NetBox Prometheus SD'
-    description = 'A Netbox plugin to export targets for Prometheus'
+    description = 'A Netbox plugin to export targets for Prometheus HTTP service discovery'
     version = '0.1.0'
     base_url = 'prometheus-sd'
 

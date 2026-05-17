@@ -1,11 +1,11 @@
-# netbox-plugin-prometheus-sd
+# netbox-prometheus-sd
 
 ## Demo
 
 ```bash
 docker-compose up -d
 
-docker exec netbox-plugin-prometheus-sd-netbox-1 /opt/netbox/netbox/manage.py load_initializer_data --path /etc/netbox/initializer-data
+docker exec netbox-prometheus-sd-netbox-1 /opt/netbox/netbox/manage.py load_initializer_data --path /etc/netbox/initializer-data
 ```
 
 Login into Netbox (http://localhost:8080) and create **Config Context** named `prometheus_role_map` with the following JSON structure:
