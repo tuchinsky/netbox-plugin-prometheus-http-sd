@@ -2,25 +2,58 @@ import os
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, BasePermission
+
+from netbox.api.authentication import TokenAuthentication as NetBoxTokenAuthentication
+
 from dcim.models import Device
 from virtualization.models import VirtualMachine
 from extras.models import ConfigContext
 
+# auth enabled by default
+AUTH_ENABLED = os.environ.get('PROMETHEUS_SD_AUTH_ENABLED', 'false').lower() in ('true', '1', 'yes', 'on')
 TARGET_SOURCE = os.environ.get('PROMETHEUS_SD_TARGET_SOURCE', 'dns')
+
 if TARGET_SOURCE not in ('ip', 'dns'):
     raise ValueError(
         f"Incorrect value PROMETHEUS_SD_TARGET_SOURCE: '{TARGET_SOURCE}'. "
         "Acceptable values: 'ip', 'dns'."
     )
 
+# device read and virtualmachine read permissions are required if auth enabled
+class PrometheusSDPermission(BasePermission):
+
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        return (
+            request.user.has_perm('dcim.view_device') and
+            request.user.has_perm('virtualization.view_virtualmachine')
+        )
+
+
 class PrometheusTargetsView(APIView):
-    permission_classes = []
+    if AUTH_ENABLED:
+        authentication_classes = [NetBoxTokenAuthentication]
+        permission_classes = [IsAuthenticated, PrometheusSDPermission]
+    else:
+        authentication_classes = []
+        permission_classes = []
 
     def get(self, request, format=None):
         mapping = self._get_prometheus_mapping()
         targets = []
 
-        for device in Device.objects.filter(status='active'):
+        # if auth enabled — use restrict()
+        if AUTH_ENABLED and request.user.is_authenticated:
+            devices_qs = Device.objects.restrict(request.user, 'view')
+            vms_qs = VirtualMachine.objects.restrict(request.user, 'view')
+        else:
+            devices_qs = Device.objects
+            vms_qs = VirtualMachine.objects
+
+        for device in devices_qs.filter(status='active'):
             if not device.custom_field_data or 'role' not in device.custom_field_data:
                 continue
 
@@ -29,11 +62,10 @@ class PrometheusTargetsView(APIView):
                 continue
 
             self._add_targets(
-                targets, ip, device.name, 'device', mapping,
-                device.custom_field_data
+                targets, ip, device.name, 'device', mapping, device.custom_field_data
             )
 
-        for vm in VirtualMachine.objects.filter(status='active'):
+        for vm in vms_qs.filter(status='active'):
             if not vm.custom_field_data or 'role' not in vm.custom_field_data:
                 continue
 
@@ -42,8 +74,7 @@ class PrometheusTargetsView(APIView):
                 continue
 
             self._add_targets(
-                targets, ip, vm.name, 'vm', mapping,
-                vm.custom_field_data
+                targets, ip, vm.name, 'vm', mapping, vm.custom_field_data
             )
 
         return Response(targets)
