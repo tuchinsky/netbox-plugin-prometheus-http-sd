@@ -1,4 +1,8 @@
 # netbox-plugin-prometheus-http-sd
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CI](https://github.com/tuchinsky/netbox-plugin-prometheus-http-sd/actions/workflows/publish.yml/badge.svg)](https://github.com/tuchinsky/netbox-plugin-prometheus-http-sd/actions/workflows/publish.yml)
+![CI](https://img.shields.io/github/actions/workflow/status/tuchinsky/netbox-plugin-prometheus-http-sd/publish.yml)
+[![PyPI](https://img.shields.io/pypi/v/netbox-plugin-prometheus-http-sd)](https://pypi.org/project/netbox-plugin-prometheus-http-sd/)
 
 ## Demo
 
