@@ -11,12 +11,12 @@ from virtualization.models import VirtualMachine
 from extras.models import ConfigContext
 
 # auth enabled by default
-AUTH_ENABLED = os.environ.get('PROMETHEUS_SD_AUTH_ENABLED', 'false').lower() in ('true', '1', 'yes', 'on')
-TARGET_SOURCE = os.environ.get('PROMETHEUS_SD_TARGET_SOURCE', 'dns')
+AUTH_ENABLED = os.environ.get('PROMETHEUS_HTTP_SD_AUTH_ENABLED', 'false').lower() in ('true', '1', 'yes', 'on')
+TARGET_SOURCE = os.environ.get('PROMETHEUS_HTTP_SD_TARGET_SOURCE', 'dns')
 
 if TARGET_SOURCE not in ('ip', 'dns'):
     raise ValueError(
-        f"Incorrect value PROMETHEUS_SD_TARGET_SOURCE: '{TARGET_SOURCE}'. "
+        f"Incorrect value PROMETHEUS_HTTP_SD_TARGET_SOURCE: '{TARGET_SOURCE}'. "
         "Acceptable values: 'ip', 'dns'."
     )
 
